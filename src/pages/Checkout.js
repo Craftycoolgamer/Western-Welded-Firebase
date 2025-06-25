@@ -7,13 +7,13 @@ function Checkout({ cart }) {
   const handleClick = async () => {
     // const stripe = await stripePromise;
     
-    const response = await fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ cart }),
-    });
+    // const response = await fetch('/create-checkout-session', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ cart }),
+    // });
     
   //   const session = await response.json();
   //   const result = await stripe.redirectToCheckout({

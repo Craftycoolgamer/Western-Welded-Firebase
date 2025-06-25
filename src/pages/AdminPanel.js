@@ -1,4 +1,4 @@
-import { ref, onValue, push, set, remove } from 'firebase/database';
+import { ref, onValue, push, set } from 'firebase/database';
 import { db } from '../configuration';
 import { useState, useEffect } from 'react';
 import AdminProductCard from '../components/AdminProductCard';
@@ -16,7 +16,7 @@ function AdminPanel() {
     stock: 1,
     material: 'gold'
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
