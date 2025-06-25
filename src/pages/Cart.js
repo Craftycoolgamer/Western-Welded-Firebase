@@ -1,58 +1,115 @@
-// Cart.js
-function Cart({ cart, removeFromCart, updateQuantity }) {
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
+import './Cart.css';
+
+function Cart() {
+  const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
+
+  const handleQuantityChange = (id, e) => {
+    updateQuantity(id, parseInt(e.target.value));
+  };
+
+  if (cart.length === 0) {
+    return (
+      <div className="empty-cart">
+        <div className="empty-cart-content">
+          <h2>Your Jewelry Cart is Empty</h2>
+          <p>Discover our exquisite collection and find something special</p>
+          <Link to="/products" className="shop-btn">
+            Browse Jewelry
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="cart">
-      <h2>Your Shopping Bag</h2>
-      {cart.length === 0 ? (
-        <p>Your cart is empty</p>
-      ) : (
-        <>
-          <div className="cart-items">
-            {cart.map((item) => (
+    <div className="checkout-container">
+      <div className="checkout-grid">
+        <div className="cart-items">
+          <h2>Your Shopping Bag</h2>
+          
+          <div className="cart-items-list">
+            {cart.map(item => (
               <div key={item.id} className="cart-item">
-                <img src={item.imageUrl} alt={item.name} />
+                <div className="item-image">
+                  <img src={item.imageUrl} alt={item.name} />
+                </div>
                 <div className="item-details">
                   <h3>{item.name}</h3>
+                  <p className="item-category">{item.category}</p>
+                  <p className="item-material">Material: {item.material}</p>
+                  
                   <div className="quantity-controls">
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
-                      −
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                      +
-                    </button>
+                    <label>Qty:</label>
+                    <select
+                      value={item.quantity}
+                      onChange={(e) => handleQuantityChange(item.id, e)}
+                    >
+                      {[1, 2, 3, 4, 5].map(num => (
+                        <option key={num} value={num}>{num}</option>
+                      ))}
+                    </select>
                   </div>
-                  <div className="price">${(item.price * item.quantity).toFixed(2)}</div>
+                  
                   <button 
-                    className="remove-btn"
+                    className="remove-item"
                     onClick={() => removeFromCart(item.id)}
                   >
                     Remove
                   </button>
                 </div>
+                <div className="item-price">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </div>
               </div>
             ))}
           </div>
-          <div className="cart-summary">
-            <h3>Order Summary</h3>
-            <div className="summary-row">
-              <span>Subtotal</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-            <div className="summary-row">
-              <span>Shipping</span>
-              <span>$5.99</span>
-            </div>
-            <div className="summary-row total">
-              <span>Total</span>
-              <span>${(total + 5.99).toFixed(2)}</span>
-            </div>
-            <button className="checkout-btn">Proceed to Checkout</button>
+          
+          <button className="clear-cart" onClick={clearCart}>
+            Clear Entire Cart
+          </button>
+        </div>
+
+        <div className="order-summary">
+          <h2>Order Summary</h2>
+          
+          <div className="summary-row">
+            <span>Subtotal ({cart.reduce((acc, item) => acc + item.quantity, 0)} items)</span>
+            <span>${cartTotal.toFixed(2)}</span>
           </div>
-        </>
-      )}
+          
+          <div className="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+          
+          <div className="summary-row">
+            <span>Estimated Tax</span>
+            <span>${(cartTotal * 0.08).toFixed(2)}</span>
+          </div>
+          
+          <div className="summary-total">
+            <span>Total</span>
+            <span>${(cartTotal * 1.08).toFixed(2)}</span>
+          </div>
+          
+          <button className="checkout-btn">
+            Proceed to Checkout
+          </button>
+          
+          <div className="payment-methods">
+            <img src="/images/visa.png" alt="Visa" />
+            <img src="/images/mastercard.png" alt="Mastercard" />
+            <img src="/images/amex.png" alt="American Express" />
+            <img src="/images/paypal.png" alt="PayPal" />
+          </div>
+          
+          <div className="secure-checkout">
+            🔒 Secure Checkout
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

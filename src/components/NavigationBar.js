@@ -6,12 +6,14 @@ import './NavigationBar.css';
 
 function NavigationBar() {
   const { currentUser, logout } = useAuth();
-  const { cart } = useCart();
+  const { cart = [] } = useCart();
   const navigate = useNavigate();
 
   const handleAdminClick = () => {
     navigate('/admin');
   };
+
+  const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
     <nav className="navbar">
@@ -58,8 +60,7 @@ function NavigationBar() {
           <Link to="/cart" className="cart-link">
             🛒
             {cart.length > 0 && (
-              <span className="cart-count">{cart.length}</span>
-            )}
+              <span className="cart-count">{cartItemCount}</span>            )}
           </Link>
         </div>
       </div>

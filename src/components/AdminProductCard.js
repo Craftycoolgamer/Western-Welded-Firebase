@@ -1,38 +1,73 @@
 import React, { useState } from 'react';
+import { ref, set, remove } from 'firebase/database';
+import { db } from '../configuration';
+import './AdminProductCard.css';
 
-function AdminProductCard({ product, onUpdate, onDelete }) {
+function AdminProductCard({ product }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSave = () => {
-    onUpdate(product.id, editedProduct);
+    set(ref(db, `products/${product.id}`), editedProduct);
     setIsEditing(false);
   };
+
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      setIsDeleting(true);
+      remove(ref(db, `products/${product.id}`));
+    }
+  };
+
+  if (isDeleting) return null;
 
   return (
     <div className="admin-product-card">
       {isEditing ? (
         <div className="edit-form">
-          <input
-            value={editedProduct.name}
-            onChange={(e) => setEditedProduct({...editedProduct, name: e.target.value})}
-          />
-          <input
-            type="number"
-            value={editedProduct.price}
-            onChange={(e) => setEditedProduct({...editedProduct, price: parseFloat(e.target.value)})}
-          />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={() => setIsEditing(false)}>Cancel</button>
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              value={editedProduct.name}
+              onChange={(e) => setEditedProduct({...editedProduct, name: e.target.value})}
+            />
+          </div>
+          <div className="form-group">
+            <label>Price</label>
+            <input
+              type="number"
+              value={editedProduct.price}
+              onChange={(e) => setEditedProduct({...editedProduct, price: parseFloat(e.target.value)})}
+            />
+          </div>
+          <div className="form-group">
+            <label>Stock</label>
+            <input
+              type="number"
+              value={editedProduct.stock}
+              onChange={(e) => setEditedProduct({...editedProduct, stock: parseInt(e.target.value)})}
+            />
+          </div>
+          <div className="button-group">
+            <button className="save-btn" onClick={handleSave}>Save</button>
+            <button className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+          </div>
         </div>
       ) : (
         <div className="product-display">
-          <img src={product.imageUrl} alt={product.name} width="100" />
-          <h3>{product.name}</h3>
-          <p>${product.price.toFixed(2)}</p>
-          <div className="actions">
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={() => onDelete(product.id)}>Delete</button>
+          <div className="product-image-container">
+            <img src={product.imageUrl} alt={product.name} />
+            <div className="product-badge">{product.category}</div>
+          </div>
+          <div className="product-info">
+            <h4>{product.name}</h4>
+            <p className="price">${product.price.toFixed(2)}</p>
+            <p className="stock">{product.stock} in stock</p>
+            <div className="product-actions">
+              <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+              <button className="delete-btn" onClick={handleDelete}>Delete</button>
+            </div>
           </div>
         </div>
       )}

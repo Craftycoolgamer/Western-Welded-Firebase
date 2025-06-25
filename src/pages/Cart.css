@@ -1,0 +1,258 @@
+/* Main Container */
+.checkout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 992px) {
+  .checkout-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Empty Cart State */
+.empty-cart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.empty-cart-content {
+  max-width: 500px;
+}
+
+.empty-cart h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.empty-cart p {
+  color: #777;
+  margin-bottom: 2rem;
+}
+
+.shop-btn {
+  background-color: #b78d65;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.shop-btn:hover {
+  background-color: #9a7552;
+}
+
+/* Cart Items Section */
+.cart-items h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.item-image {
+  width: 100px;
+  height: 100px;
+}
+
+.item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-details h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.item-category {
+  color: #777;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.item-material {
+  color: #555;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.quantity-controls label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.quantity-controls select {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.remove-item {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  padding: 0;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  width: fit-content;
+}
+
+.item-price {
+  font-weight: bold;
+  color: #2c3e50;
+  align-self: center;
+}
+
+.clear-cart {
+  background: none;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.clear-cart:hover {
+  background-color: #fdecea;
+}
+
+/* Order Summary */
+.order-summary {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+
+.order-summary h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.checkout-btn {
+  background-color: #b78d65;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1.5rem;
+}
+
+.checkout-btn:hover {
+  background-color: #9a7552;
+}
+
+.payment-methods {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.payment-methods img {
+  height: 24px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+
+.payment-methods img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+.secure-checkout {
+  text-align: center;
+  color: #4CAF50;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .cart-item {
+    grid-template-columns: 80px 1fr;
+  }
+  
+  .item-price {
+    grid-column: 2;
+    justify-self: end;
+  }
+}
