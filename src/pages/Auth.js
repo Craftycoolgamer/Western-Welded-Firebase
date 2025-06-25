@@ -69,6 +69,7 @@ function Auth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className='input-field'
             />
           </div>
 
@@ -80,12 +81,19 @@ function Auth() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength="6"
+              className='input-field'
             />
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? 'Processing...' : isLogin ? 'Login' : 'Sign Up'}
-          </button>
+          <div className="form-actions">
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="auth-submit-btn"
+            >
+              {loading ? 'Processing...' : isLogin ? 'Login' : 'Sign Up'}
+            </button>
+          </div>
         </form>
 
         <div className="auth-toggle">

@@ -30,6 +30,7 @@ function AdminProductCard({ product }) {
             <label>Name</label>
             <input
               value={editedProduct.name}
+              className='input-field'
               onChange={(e) => setEditedProduct({...editedProduct, name: e.target.value})}
             />
           </div>
@@ -38,6 +39,7 @@ function AdminProductCard({ product }) {
             <input
               type="number"
               value={editedProduct.price}
+              className='input-field'
               onChange={(e) => setEditedProduct({...editedProduct, price: parseFloat(e.target.value)})}
             />
           </div>
@@ -46,6 +48,7 @@ function AdminProductCard({ product }) {
             <input
               type="number"
               value={editedProduct.stock}
+              className='input-field'
               onChange={(e) => setEditedProduct({...editedProduct, stock: parseInt(e.target.value)})}
             />
           </div>

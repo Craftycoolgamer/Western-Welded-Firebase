@@ -24,12 +24,6 @@ function ProductDetail() {
   if (loading) return <div className="loading-spinner">Loading...</div>;
   if (!product) return <div className="not-found">Product not found</div>;
 
-  // Create array of images - main image plus any additional images
-  const allImages = [
-    product.imageUrl,
-    ...(product.additionalImages || [])
-  ];
-
   const handleAddToCart = () => {
     addToCart({
       ...product,
@@ -39,15 +33,17 @@ function ProductDetail() {
 
   return (
     <div className="product-detail-container">
-      <div className="product-gallery">
-        <div className="main-image">
+      <div className="main-image">
           <img 
-            src={allImages[selectedImage]} 
-            alt={product.name} 
-            className="featured-image"
-          />
-        </div>
-        
+          src={product.imageUrl || '/images/default-jewelry.jpg'} 
+          alt={product.name}
+          className="product-image"
+          onError={(e) => {
+            e.target.src = '/images/default-jewelry.jpg';
+          }}
+        />
+        {product.isNew && <span className="new-badge">New</span>}
+        {product.stock <= 0 && <span className="out-of-stock-badge">Out of Stock</span>}
       </div>
 
       <div className="product-info">
@@ -65,11 +61,7 @@ function ProductDetail() {
           {product.originalPrice && (
             <span className="original-price">${product.originalPrice.toFixed(2)}</span>
           )}
-          {product.originalPrice && (
-            <span className="discount-badge">
-              Save {Math.round(((product.originalPrice - product.price) / product.originalPrice * 100))}%
-            </span>
-          )}
+          
         </div>
 
         <div className="product-description">
@@ -135,13 +127,7 @@ function ProductDetail() {
               <p>Hassle-free returns</p>
             </div>
           </div>
-          <div className="delivery-option">
-            <span className="icon">🔒</span>
-            <div>
-              <h4>Secure Payment</h4>
-              <p>100% protected</p>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

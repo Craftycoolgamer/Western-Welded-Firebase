@@ -13,6 +13,15 @@ function NavigationBar() {
     navigate('/admin');
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/'); // Redirect to home after logout
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
+
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
@@ -20,8 +29,8 @@ function NavigationBar() {
       <div className="navbar-container">
         {/* Logo/Brand */}
         <Link to="/" className="navbar-brand">
-          <span className="logo-icon">💎</span>
-          <span className="logo-text">Luxury Jewelry</span>
+          <img className="logo-icon" src="/images/Western_Welded_1d548.svg" />
+          {/* <span className="logo-text">Western Welded</span> */}
         </Link>
 
         {/* Main Navigation Links */}
@@ -49,7 +58,9 @@ function NavigationBar() {
               <span className="user-icon">👤</span>
               <div className="dropdown-content">
                 <Link to="/account">My Account</Link>
-                <button onClick={logout}>Logout</button>
+                <button onClick={handleLogout} className="logout-btn">
+                  Logout
+                </button>
               </div>
             </div>
           ) : (

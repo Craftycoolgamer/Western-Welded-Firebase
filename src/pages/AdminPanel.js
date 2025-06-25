@@ -16,7 +16,7 @@ function AdminPanel() {
     stock: 1,
     material: 'gold'
   });
-  // const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
@@ -182,7 +182,7 @@ function AdminPanel() {
           </div>
         ) : (
           <p className="no-products">
-            {searchTerm ? 'No matching products found' : 'No products available'}
+            {true ? 'No matching products found' : 'No products available'}
           </p>
         )}
       </div>

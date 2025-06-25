@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Add signOut import
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
   const auth = getAuth();
 
   useEffect(() => {
@@ -22,9 +22,25 @@ export function AuthProvider({ children }) {
     return <div className="auth-loading">Loading user session...</div>;
   }
 
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setCurrentUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser }}>
-      {children}
+    <AuthContext.Provider 
+      value={{ 
+        currentUser, 
+        logout, // Add logout to the context value
+        // ... other auth functions ...
+      }}
+    >
+      {!loading && children}
     </AuthContext.Provider>
   );
 }

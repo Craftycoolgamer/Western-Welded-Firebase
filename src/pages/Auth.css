@@ -62,6 +62,35 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
+.form-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.auth-submit-btn {
+  background-color: #b78d65;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%; /* Makes button full width */
+  max-width: 300px; /* But limits maximum width */
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background-color: #9a7552;
+}
+
+.auth-submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+
 .auth-toggle {
   text-align: center;
   margin-top: 1.5rem;
