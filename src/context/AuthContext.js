@@ -5,24 +5,19 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Track loading state
   const auth = getAuth();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // Check if user is admin (you might want to store this in Firestore)
-      const isAdmin = user.email === 'admin@example.com';
-      setCurrentUser({ ...user, isAdmin });
-    } else {
-      setCurrentUser(null);
-      setLoading(false);
-    }
-  });
+      setCurrentUser(user);
+      setLoading(false); // Set loading to false when auth check completes
+    });
 
-    return unsubscribe;
+    return unsubscribe; // Cleanup subscription
   }, [auth]);
 
+  // Don't render children until auth state is determined
   if (loading) {
     return <div className="auth-loading">Loading user session...</div>;
   }
