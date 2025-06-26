@@ -8,6 +8,8 @@ import Checkout from './pages/Checkout';
 import Auth from './pages/Auth';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ children }) {
@@ -48,6 +50,8 @@ function AppRouter() {
         <Route path="/product/:productId" element={<Layout><ProductDetail /></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         <Route path="/auth" element={<Layout><Auth /></Layout>} />
+        <Route path="/about" element={<Layout><About /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
         
         {/* Protected Admin Route */}
         <Route 

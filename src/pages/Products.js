@@ -30,7 +30,7 @@ function Products() {
 
   return (
     <div className="products-page">
-      <h1>{category || 'All Jewelry'}</h1>
+      <h1>{category || 'All Products'}</h1>
       <div className="products-grid">
         {products.map(product => (
           <ProductCard key={product.id} product={product} />

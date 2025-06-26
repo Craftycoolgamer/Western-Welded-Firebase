@@ -25,10 +25,24 @@ function ProductDetail() {
   if (!product) return <div className="not-found">Product not found</div>;
 
   const handleAddToCart = () => {
-    addToCart({
-      ...product,
-      quantity: quantity
-    });
+    // First validate the current quantity is within stock limits
+    const validQuantity = Math.min(quantity, product.stock);
+    setQuantity(validQuantity); // Update the displayed quantity if needed
+    
+    if (validQuantity > 0) {
+      addToCart({
+        ...product,
+        quantity: validQuantity
+      });
+      // Optional: Show success message
+      // alert(`Added ${validQuantity} ${product.name} to cart!`);
+    } else {
+      // alert("This product is out of stock");
+    }
+  };
+
+  const handleIncrement = () => {
+    setQuantity(prev => Math.min(prev + 1, product.stock));
   };
 
   return (
@@ -96,7 +110,7 @@ function ProductDetail() {
               </button>
               <span>{quantity}</span>
               <button 
-                onClick={() => setQuantity(quantity + 1)}
+                onClick={handleIncrement}  // Use the new handler
                 disabled={quantity >= product.stock}
               >
                 +

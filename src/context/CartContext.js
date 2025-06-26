@@ -21,14 +21,23 @@ export function CartProvider({ children }) {
   const addToCart = (product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
+      
+      // Calculate how many we can actually add
+      const availableToAdd = product.stock - (existingItem?.quantity || 0);
+      const quantityToAdd = Math.min(product.quantity, availableToAdd);
+      
+      if (quantityToAdd <= 0) {
+        return prevCart; // Don't modify cart if nothing can be added
+      }
+
       if (existingItem) {
         return prevCart.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantityToAdd }
             : item
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, { ...product, quantity: quantityToAdd }];
     });
   };
 

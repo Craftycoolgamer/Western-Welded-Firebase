@@ -7,13 +7,13 @@
   /* background: linear-gradient(rgba(0, 0, 0, 0.5), url('/images/hero-bg.jpg')); */
   background-size: cover;
   background-position: center;
-  height: 60vh;
+  height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: rgb(0, 0, 0);
-  margin-bottom: 3rem;
+  /* margin-bottom: 3rem; */
 }
 
 .hero-content h1 {

@@ -8,6 +8,7 @@ function NavigationBar() {
   const { currentUser, logout } = useAuth();
   const { cart = [] } = useCart();
   const navigate = useNavigate();
+  
 
   const handleAdminClick = () => {
     navigate('/admin');
@@ -29,11 +30,13 @@ function NavigationBar() {
       <div className="navbar-container">
         {/* Logo/Brand */}
         <Link to="/" className="navbar-brand">
-          <img className="logo-icon" src="/images/Western_Welded_1d548.svg" />
+          <img className="logo-icon" src="/images/Western_Welded_logo.svg" />
           {/* <span className="logo-text">Western Welded</span> */}
         </Link>
 
-        {/* Main Navigation Links */}
+        <div className="nav-content">
+          
+{/* Main Navigation Links */}
         <div className="navbar-links">
           <Link to="/products" className="nav-link">Shop</Link>
           <Link to="/about" className="nav-link">About</Link>
@@ -74,6 +77,9 @@ function NavigationBar() {
               <span className="cart-count">{cartItemCount}</span>            )}
           </Link>
         </div>
+
+        </div>
+        
       </div>
     </nav>
   );

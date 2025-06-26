@@ -44,8 +44,10 @@ function Home() {
           <div className="products-grid">
             {featuredProducts.map(product => (
               <div key={product.id} className="product-card">
-                <Link to={`/product/${product.id}`}>
-                  <img src={product.imageUrl} alt={product.name} />
+                <Link to={`/product/${product.id}`} className='product-link'>
+                  <div className="product-image-container">
+                    <img src={product.imageUrl} alt={product.name} />
+                  </div>
                   <h3>{product.name}</h3>
                   <p className="price">${product.price.toFixed(2)}</p>
                 </Link>
@@ -55,16 +57,7 @@ function Home() {
         )}
       </section>
 
-      {/* About Section */}
-      <section className="about-section">
-        <h2>Artisan Craftsmanship</h2>
-        <p>
-          Each piece in our collection is handcrafted by skilled artisans using 
-          ethically sourced materials and traditional techniques passed down 
-          through generations.
-        </p>
-        <Link to="/about" className="learn-more-btn">Our Story</Link>
-      </section>
+      
     </div>
   );
 }
