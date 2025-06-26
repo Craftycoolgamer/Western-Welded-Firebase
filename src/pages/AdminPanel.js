@@ -13,11 +13,12 @@ function AdminPanel() {
     description: '',
     imageUrl: '',
     category: 'rings',
-    stock: 1,
-    material: 'gold'
+    material: 'gold',
+    sizes: [],
+    sizeStock: {}
   });
-  const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
 
   useEffect(() => {
     const productsRef = ref(db, 'products');
@@ -27,54 +28,47 @@ function AdminPanel() {
         setProducts(Object.entries(data).map(([id, product]) => ({ id, ...product })));
       }
     });
-  }, []);
+  }, [updateTrigger]);
 
   const handleAddProduct = () => {
+    const productToAdd = {
+      ...newProduct,
+      stock: newProduct.sizes.length > 0 
+        ? Object.values(newProduct.sizeStock).reduce((a, b) => a + b, 0)
+        : 1
+    };
+
     const newProductRef = push(ref(db, 'products'));
-    set(newProductRef, newProduct);
+    set(newProductRef, productToAdd);
+    
     setNewProduct({
       name: '',
       price: 0,
       description: '',
       imageUrl: '',
       category: 'rings',
-      stock: 1,
-      material: 'gold'
+      material: 'gold',
+      sizes: [],
+      sizeStock: {}
     });
     setIsFormOpen(false);
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div className="admin-container">
+    <div className="admin-panel">
       <div className="admin-header">
-        <h2>Product Management</h2>
-        <div className="admin-actions">
-          {/* <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <span className="search-icon">🔍</span>
-          </div> */}
-          <button 
-            className="add-product-toggle"
-            onClick={() => setIsFormOpen(!isFormOpen)}
-          >
-            {isFormOpen ? 'Cancel' : '+ Add Product'}
-          </button>
-        </div>
+        <h1>Product Management</h1>
+        <button 
+          className="add-product-btn"
+          onClick={() => setIsFormOpen(!isFormOpen)}
+        >
+          {isFormOpen ? 'Cancel' : '+ Add Product'}
+        </button>
       </div>
 
       {isFormOpen && (
-        <div className="add-product-form">
-          <h3>Add New Jewelry Item</h3>
+        <div className="product-form">
+          <h2>Add New Product</h2>
           <div className="form-grid">
             <div className="form-group">
               <label>Product Name*</label>
@@ -83,7 +77,6 @@ function AdminPanel() {
                 value={newProduct.name}
                 onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
                 required
-                className='input-field'
               />
             </div>
 
@@ -92,11 +85,11 @@ function AdminPanel() {
               <input
                 type="number"
                 value={newProduct.price}
-                onChange={(e) => setNewProduct({...newProduct, price: parseFloat(e.target.value)})}
-                min="0"
-                step="0.01"
+                onChange={(e) => setNewProduct({...newProduct, price: parseFloat(e.target.value) || 0})}
+                // min="0"
+                step="1"
                 required
-                className='input-field'
+                placeholder='0'
               />
             </div>
 
@@ -110,6 +103,7 @@ function AdminPanel() {
                 <option value="necklaces">Necklaces</option>
                 <option value="earrings">Earrings</option>
                 <option value="bracelets">Bracelets</option>
+                <option value="flowers">Flowers</option>
               </select>
             </div>
 
@@ -119,33 +113,21 @@ function AdminPanel() {
                 value={newProduct.material}
                 onChange={(e) => setNewProduct({...newProduct, material: e.target.value})}
               >
-                <option value="gold">Gold</option>
-                <option value="silver">Silver</option>
-                <option value="platinum">Platinum</option>
-                <option value="diamond">Diamond</option>
+                {/* <option value="gold">Gold</option> */}
+                <option value="silver">Steel</option>
+                <option value="platinum">Copper</option>
+                {/* <option value="diamond">Diamond</option> */}
               </select>
-            </div>
-
-            <div className="form-group">
-              <label>Stock*</label>
-              <input
-                type="number"
-                value={newProduct.stock}
-                onChange={(e) => setNewProduct({...newProduct, stock: parseInt(e.target.value)})}
-                min="1"
-                required
-                className='input-field'
-              />
             </div>
 
             <div className="form-group full-width">
               <label>Product Image*</label>
-                <Base64Uploader 
-                  onImageUpload={(base64String) => 
-                    setNewProduct({...newProduct, imageUrl: base64String})
-                  }
-                  currentImage={newProduct.imageUrl}
-                />
+              <Base64Uploader 
+                onImageUpload={(base64String) => 
+                  setNewProduct({...newProduct, imageUrl: base64String})
+                }
+                currentImage={newProduct.imageUrl}
+              />
             </div>
 
             <div className="form-group full-width">
@@ -154,13 +136,86 @@ function AdminPanel() {
                 value={newProduct.description}
                 onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
                 rows="3"
-                className='input-field'
               />
+            </div>
+
+            <div className="form-group full-width">
+              <label>Available Sizes</label>
+              <div className="size-management">
+                <div className="size-inputs">
+                  <input
+                    type="text"
+                    placeholder="Size"
+                    id="newSize"
+                    className="size-input"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Qty"
+                    id="newSizeStock"
+                    min="1"
+                    className="size-qty-input"
+                  />
+                  <button 
+                    type="button"
+                    className="add-size-btn"
+                    onClick={() => {
+                      const sizeInput = document.getElementById('newSize');
+                      const stockInput = document.getElementById('newSizeStock');
+                      const size = sizeInput.value.trim().toUpperCase();
+                      const stock = parseInt(stockInput.value) || 0;
+                      
+                      if (size && !newProduct.sizes.includes(size)) {
+                        setNewProduct({
+                          ...newProduct,
+                          sizes: [...newProduct.sizes, size],
+                          sizeStock: {
+                            ...newProduct.sizeStock,
+                            [size]: stock
+                          }
+                        });
+                        sizeInput.value = '';
+                        stockInput.value = '';
+                      }
+                    }}
+                  >
+                    Add Size
+                  </button>
+                </div>
+                
+                {newProduct.sizes.length > 0 && (
+                  <div className="selected-sizes">
+                    <h4>Added Sizes:</h4>
+                    <div className="size-tags">
+                      {newProduct.sizes.map(size => (
+                        <div key={size} className="size-tag">
+                          <span>{size}</span>
+                          <span>({newProduct.sizeStock[size] || 0})</span>
+                          <button
+                            onClick={() => {
+                              const updatedSizes = newProduct.sizes.filter(s => s !== size);
+                              const updatedSizeStock = {...newProduct.sizeStock};
+                              delete updatedSizeStock[size];
+                              setNewProduct({
+                                ...newProduct,
+                                sizes: updatedSizes,
+                                sizeStock: updatedSizeStock
+                              });
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           <button 
-            className="add-product-btn"
+            className="submit-btn"
             onClick={handleAddProduct}
             disabled={!newProduct.name || !newProduct.imageUrl || !newProduct.price}
           >
@@ -170,20 +225,19 @@ function AdminPanel() {
       )}
 
       <div className="products-list">
-        <h3>Current Products ({filteredProducts.length})</h3>
-        {filteredProducts.length > 0 ? (
+        <h2>Current Products ({products.length})</h2>
+        {products.length > 0 ? (
           <div className="products-grid">
-            {filteredProducts.map(product => (
+            {products.map(product => (
               <AdminProductCard 
                 key={product.id} 
-                product={product} 
+                product={product}
+                onUpdate={() => setUpdateTrigger(prev => prev + 1)}
               />
             ))}
           </div>
         ) : (
-          <p className="no-products">
-            {true ? 'No matching products found' : 'No products available'}
-          </p>
+          <p className="no-products">No products available</p>
         )}
       </div>
     </div>

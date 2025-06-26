@@ -24,22 +24,17 @@ function ProductCard({ product }) {
         </div>
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
-          <p className="product-category">{product.category}</p>
-          <div className="product-price">${product.price.toFixed(2)}</div>
-          {product.originalPrice && (
-            <div className="original-price">
-              ${product.originalPrice.toFixed(2)}
-            </div>
-          )}
+          {/* <p className="product-category">{product.category}</p> */}
+          <div className="product-price">${product.price.toFixed(2)} USD</div>
         </div>
       </Link>
-      <button 
-        className="add-to-cart-btn"
+      {/* <button 
+        className="add-to-cart-btn-card"
         onClick={() => addToCart(product)}
         disabled={product.stock <= 0}
       >
         {product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
-      </button>
+      </button> */}
     </div>
   );
 }

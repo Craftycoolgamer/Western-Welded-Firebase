@@ -3,47 +3,65 @@ import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../configuration';
 import { useCart } from '../context/CartContext';
+import { useNotification } from '../context/NotificationContext';
 import './ProductDetail.css';
 
 function ProductDetail() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState('');
+  const { showNotification } = useNotification();
   const { addToCart } = useCart();
 
   useEffect(() => {
     const productRef = ref(db, `products/${productId}`);
     onValue(productRef, (snapshot) => {
-      setProduct({ id: productId, ...snapshot.val() });
+      const productData = snapshot.val();
+      setProduct({ 
+        id: productId, 
+        ...productData,
+        sizes: productData.sizes || []
+      });
       setLoading(false);
     });
   }, [productId]);
 
-  if (loading) return <div className="loading-spinner">Loading...</div>;
-  if (!product) return <div className="not-found">Product not found</div>;
-
   const handleAddToCart = () => {
-    // First validate the current quantity is within stock limits
-    const validQuantity = Math.min(quantity, product.stock);
-    setQuantity(validQuantity); // Update the displayed quantity if needed
-    
-    if (validQuantity > 0) {
-      addToCart({
-        ...product,
-        quantity: validQuantity
-      });
-      // Optional: Show success message
-      // alert(`Added ${validQuantity} ${product.name} to cart!`);
-    } else {
-      // alert("This product is out of stock");
+    // Validate size selection for products with sizes
+    if (product.sizes.length > 0 && !selectedSize) {
+      showNotification('Please select a size', 'error');
+      return;
     }
+
+    // Check stock availability
+    const availableStock = product.sizeStock?.[selectedSize] ?? product.stock;
+    if (quantity > availableStock) {
+      showNotification(`Only ${availableStock} available in this size`, 'error');
+      return;
+    }
+
+    addToCart({
+      ...product,
+      quantity: quantity,
+      selectedSize: product.sizes.length > 0 ? selectedSize : null
+    });
+    
+    // Optional: Show success message
+    showNotification(
+      `${quantity} ${product.name} ${selectedSize ? `(Size: ${selectedSize})` : ''} added to cart!`,
+      'success'
+    );
   };
 
   const handleIncrement = () => {
-    setQuantity(prev => Math.min(prev + 1, product.stock));
+    const availableStock = product.sizeStock?.[selectedSize] ?? product.stock;
+    setQuantity(prev => Math.min(prev + 1, availableStock));
   };
+
+  if (loading) return <div className="loading-spinner">Loading...</div>;
+  if (!product) return <div className="not-found">Product not found</div>;
 
   return (
     <div className="product-detail-container">
@@ -78,10 +96,15 @@ function ProductDetail() {
           
         </div>
 
-        <div className="product-description">
-          <p>{product.description}</p>
-        </div>
+        {/* Description */}
+        { product.description != "" && (
+          <div className="product-description">
+            <p>{product.description}</p>
+          </div>
+        )}
+        
 
+        {/* Product Specifications */}
         <div className="product-specs">
           <div className="spec-row">
             <span className="spec-label">Material:</span>
@@ -99,6 +122,34 @@ function ProductDetail() {
           </div>
         </div>
 
+        {/* Size Selector */}
+        {product.sizes.length > 0 && (
+          <div className="size-selector-section">
+            <h3>Select Size</h3>
+            <div className="size-options">
+              {product.sizes.map(size => {
+                const sizeAvailable = product.sizeStock?.[size] ?? product.stock;
+                return (
+                  <button
+                    key={size}
+                    className={`size-option ${
+                      selectedSize === size ? 'selected' : ''
+                    } ${
+                      sizeAvailable <= 0 ? 'out-of-stock' : ''
+                    }`}
+                    onClick={() => setSelectedSize(size)}
+                    disabled={sizeAvailable <= 0}
+                  >
+                    {size}
+                    {sizeAvailable <= 0 && <span className="stock-badge">Out of stock</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Quantity Selector */}
         {product.stock > 0 && (
           <div className="add-to-cart-section">
             <div className="quantity-selector">
@@ -109,9 +160,9 @@ function ProductDetail() {
                 −
               </button>
               <span>{quantity}</span>
-              <button 
+              <button //TODO Fix this condition
                 onClick={handleIncrement}  // Use the new handler
-                disabled={quantity >= product.stock}
+                disabled={quantity >= (product.sizeStock?.[selectedSize] ?? product.stock)}
               >
                 +
               </button>

@@ -52,6 +52,7 @@
 
 .product-info {
   padding: 15px;
+  text-align: center;
 }
 
 .product-name {
@@ -71,7 +72,7 @@
 .product-price {
   font-weight: bold;
   color: #b78d65;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin-bottom: 5px;
 }
 
@@ -81,7 +82,7 @@
   font-size: 0.9rem;
 }
 
-.add-to-cart-btn {
+/* .add-to-cart-btn-card {
   width: calc(100% - 30px);
   margin: 0 15px 15px;
   padding: 10px;
@@ -101,4 +102,4 @@
 .add-to-cart-btn:disabled {
   background: #cccccc;
   cursor: not-allowed;
-}
+} */

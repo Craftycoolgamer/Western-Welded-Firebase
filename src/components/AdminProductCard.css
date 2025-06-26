@@ -1,63 +1,19 @@
+/* Admin Product Card Styles */
 .admin-product-card {
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
 .admin-product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.edit-form {
-  padding: 1rem;
-}
-
-.edit-form .form-group {
-  margin-bottom: 1rem;
-}
-
-.edit-form .form-group label {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-size: 0.8rem;
-  color: #555;
-}
-
-.edit-form .form-group input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.button-group {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.save-btn, .cancel-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.save-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.cancel-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.product-display {
+/* Product View Mode */
+.product-view {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -78,28 +34,16 @@
   object-fit: cover;
 }
 
-.product-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  text-transform: capitalize;
-}
-
 .product-info {
-  padding: 1rem;
+  padding: 1.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.product-info h4 {
+.product-info h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #333;
 }
 
@@ -109,10 +53,34 @@
   margin: 0 0 0.5rem 0;
 }
 
-.stock {
+.category {
   color: #666;
-  font-size: 0.8rem;
-  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.product-sizes {
+  margin: 1rem 0;
+}
+
+.product-sizes strong {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.size-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.size-tag {
+  background-color: #f5f5f5;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
 }
 
 .product-actions {
@@ -122,20 +90,170 @@
 }
 
 .edit-btn, .delete-btn {
-  padding: 0.5rem;
+  flex: 1;
+  padding: 0.75rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.8rem;
-  flex: 1;
+  font-weight: 500;
+  transition: background-color 0.3s;
 }
 
 .edit-btn {
-  background-color: #2196F3;
+  background-color: #b78d65;
   color: white;
+  margin: 0;
+}
+
+.edit-btn:hover {
+  background-color: #9a7552;
 }
 
 .delete-btn {
   background-color: #f44336;
   color: white;
+  margin: 0;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.delete-confirmation {
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: #fff8f8;
+  border: 1px solid #ffdddd;
+  border-radius: 4px;
+}
+
+.delete-confirmation p {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.confirm-delete, .cancel-delete {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.confirm-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.confirm-delete:hover {
+  background-color: #c0392b;
+}
+
+.cancel-delete {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-delete:hover {
+  background-color: #e0e0e0;
+}
+
+/* Product Edit Mode */
+.product-edit {
+  padding: 1.5rem;
+}
+
+.product-edit h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.form-group {
+  /* margin-bottom: 1rem; */
+  color: #555;
+}
+
+/* .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+} */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.size-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* .size-input-group input {
+  flex: 1;
+} */
+
+.add-size-btn {
+  background-color: #b78d65;
+  color: white;
+  border: none;
+  padding: 0 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-size-btn:hover {
+  background-color: #9a7552;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.save-btn, .cancel-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.save-btn {
+  background-color: #b78d65;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #9a7552;
+}
+
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
 }

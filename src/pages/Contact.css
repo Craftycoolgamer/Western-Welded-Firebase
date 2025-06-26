@@ -11,17 +11,17 @@
   margin-bottom: 2rem;
 }
 
-.form-group {
+/* .form-group {
   margin-bottom: 1.5rem;
-}
+} */
 
-.form-group label {
+/* .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-}
+} */
 
-.form-group input,
+
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;

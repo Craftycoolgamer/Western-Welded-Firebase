@@ -5,8 +5,9 @@ import './Cart.css';
 function Cart() {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
 
-  const handleQuantityChange = (id, e) => {
-    updateQuantity(id, parseInt(e.target.value));
+
+  const handleQuantityChange = (id, size, e) => {
+    updateQuantity(id, parseInt(e.target.value), size);
   };
 
   if (cart.length === 0) {
@@ -31,30 +32,33 @@ function Cart() {
           
           <div className="cart-items-list">
             {cart.map(item => (
-              <div key={item.id} className="cart-item">
+              <div key={item.itemKey || item.id} className="cart-item">
                 <div className="item-image">
                   <img src={item.imageUrl} alt={item.name} />
                 </div>
                 <div className="item-details">
                   <h3>{item.name}</h3>
                   <p className="item-category">{item.category}</p>
+                  {item.selectedSize && (
+                    <p className="item-size">Size: {item.selectedSize}</p>
+                  )}
                   <p className="item-material">Material: {item.material}</p>
                   
                   <div className="quantity-controls">
                     <label>Qty:</label>
                     <select
                       value={item.quantity}
-                      onChange={(e) => handleQuantityChange(item.id, e)}
+                      onChange={(e) => handleQuantityChange(item.id, item.selectedSize, e)}
                     >
-                      {[1, 2, 3, 4, 5].map(num => (
-                        <option key={num} value={num}>{num}</option>
+                      {[...Array(10).keys()].map(num => (
+                        <option key={num + 1} value={num + 1}>{num + 1}</option>
                       ))}
                     </select>
                   </div>
                   
                   <button 
                     className="remove-item"
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item.itemKey || item.id)}
                   >
                     Remove
                   </button>

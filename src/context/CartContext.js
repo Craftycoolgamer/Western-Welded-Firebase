@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useNotification } from '../context/NotificationContext';
+
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const { showNotification } = useNotification();
 
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -20,36 +23,46 @@ export function CartProvider({ children }) {
 
   const addToCart = (product) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
-      
-      // Calculate how many we can actually add
-      const availableToAdd = product.stock - (existingItem?.quantity || 0);
-      const quantityToAdd = Math.min(product.quantity, availableToAdd);
-      
-      if (quantityToAdd <= 0) {
-        return prevCart; // Don't modify cart if nothing can be added
-      }
+      // Create a unique key that includes size for products with sizes
+      const itemKey = product.selectedSize 
+        ? `${product.id}-${product.selectedSize}`
+        : product.id;
 
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantityToAdd }
-            : item
-        );
+      const existingItemIndex = prevCart.findIndex(item => 
+        (product.selectedSize 
+          ? item.id === product.id && item.selectedSize === product.selectedSize
+          : item.id === product.id)
+      );
+
+      if (existingItemIndex >= 0) {
+        const newCart = [...prevCart];
+        newCart[existingItemIndex] = {
+          ...newCart[existingItemIndex],
+          quantity: newCart[existingItemIndex].quantity + product.quantity
+        };
+        return newCart;
       }
-      return [...prevCart, { ...product, quantity: quantityToAdd }];
+      
+      return [...prevCart, { ...product, itemKey }];
     });
   };
 
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  const removeFromCart = (itemKey) => {
+    setCart(prevCart => prevCart.filter(item => 
+      item.itemKey !== itemKey && item.id !== itemKey
+    ));
+    showNotification(`${itemKey.name} removed from cart`, 'warning');
   };
 
-  const updateQuantity = (productId, newQuantity) => {
+  const updateQuantity = (productId, newQuantity, size) => {
     if (newQuantity < 1) return;
     setCart(prevCart =>
       prevCart.map(item =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
+        (size 
+          ? item.id === productId && item.selectedSize === size
+          : item.id === productId)
+          ? { ...item, quantity: newQuantity }
+          : item
       )
     );
   };

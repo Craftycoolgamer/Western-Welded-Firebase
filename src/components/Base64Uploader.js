@@ -61,16 +61,25 @@ function Base64Uploader({ onImageUpload, currentImage }) {
                 className="file-input"
               />
             </label>
-            <button 
+            <label className="remove-image-btn">
+              Remove
+              <input
+                type="click"
+                accept="image/*"
+                onClick={handleRemoveImage}
+                className="file-input"
+              />
+            </label>
+            {/* <button 
               className="remove-image-btn"
               onClick={handleRemoveImage}
             >
               Remove
-            </button>
+            </button> */}
           </div>
         </div>
       ) : (
-        <label className="upload-label">
+        <label className="upload-label input-field">
           {isLoading ? 'Processing...' : 'Upload Image'}
           <input
             type="file"

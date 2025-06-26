@@ -112,6 +112,19 @@
   font-style: italic;
 }
 
+.item-size {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.25rem 0;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.item-size::before {
+  content: "• ";
+  color: #b78d65;
+}
+
 .quantity-controls {
   display: flex;
   align-items: center;

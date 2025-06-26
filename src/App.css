@@ -57,6 +57,17 @@ header {
   font-size: 0.9rem;
 }
 
+.upload-label {
+  display: inline-block;
+  background-color: #b78d65;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
 .price {
   margin: 0 15px 15px;
   font-weight: bold;
