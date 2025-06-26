@@ -19,7 +19,7 @@ function Home() {
       
       // Get 4 random featured products
       const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
-      setFeaturedProducts(shuffled.slice(0, 4));
+      setFeaturedProducts(shuffled.slice(0, 3));
       setLoading(false);
     });
   }, []);

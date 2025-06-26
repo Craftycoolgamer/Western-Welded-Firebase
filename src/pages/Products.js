@@ -12,16 +12,23 @@ function Products() {
   useEffect(() => {
     const productsRef = ref(db, 'products');
     onValue(productsRef, (snapshot) => {
-      const allProducts = Object.entries(snapshot.val()).map(([id, data]) => ({
-        id,
-        ...data
-      }));
-      
-      setProducts(
-        category 
-          ? allProducts.filter(p => p.category === category) 
-          : allProducts
-      );
+      const data = snapshot.val();
+      if (data) {
+        const allProducts = Object.entries(data).map(([id, product]) => ({
+          id,
+          ...product,
+          // Calculate total stock for each product
+          stock: product.sizes 
+            ? Object.values(product.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
+            : product.stock || 0
+        }));
+        
+        setProducts(
+          category 
+            ? allProducts.filter(p => p.category === category) 
+            : allProducts
+        );
+      }
       setLoading(false);
     });
   }, [category]);
@@ -30,7 +37,7 @@ function Products() {
 
   return (
     <div className="products-page">
-      <h1>{category || 'All Products'}</h1>
+      <h1>{category ? `${category.charAt(0).toUpperCase() + category.slice(1)}` : 'All Products'}</h1>
       <div className="products-grid">
         {products.map(product => (
           <ProductCard key={product.id} product={product} />

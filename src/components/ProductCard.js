@@ -5,6 +5,11 @@ import './ProductCard.css';
 
 function ProductCard({ product }) {
   const { addToCart } = useCart();
+  
+  // Calculate total stock from sizes
+  const totalStock = product.sizes 
+    ? Object.values(product.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
+    : 0;
 
   return (
     <div className="product-card">
@@ -18,23 +23,15 @@ function ProductCard({ product }) {
               e.target.src = '/images/default-jewelry.jpg';
             }}
           />
-          {product.stock <= 0 && (
+          {totalStock <= 0 && (
             <div className="out-of-stock-banner">Out of Stock</div>
           )}
         </div>
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
-          {/* <p className="product-category">{product.category}</p> */}
           <div className="product-price">${product.price.toFixed(2)} USD</div>
         </div>
       </Link>
-      {/* <button 
-        className="add-to-cart-btn-card"
-        onClick={() => addToCart(product)}
-        disabled={product.stock <= 0}
-      >
-        {product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
-      </button> */}
     </div>
   );
 }

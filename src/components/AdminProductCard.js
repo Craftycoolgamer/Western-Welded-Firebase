@@ -7,7 +7,8 @@ function AdminProductCard({ product, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [newSize, setNewSize] = useState('');
+  const [newSizeName, setNewSizeName] = useState('');
+  const [newSizeMeasurement, setNewSizeMeasurement] = useState('');
   const [newSizeStock, setNewSizeStock] = useState(1);
 
   const handleSave = () => {
@@ -28,29 +29,30 @@ function AdminProductCard({ product, onUpdate }) {
   };
 
   const addSize = () => {
-    if (newSize && !editedProduct.sizes?.includes(newSize)) {
+    if (newSizeName && !editedProduct.sizes?.[newSizeName]) {
       setEditedProduct({
         ...editedProduct,
-        sizes: [...(editedProduct.sizes || []), newSize],
-        sizeStock: {
-          ...(editedProduct.sizeStock || {}),
-          [newSize]: newSizeStock
+        sizes: {
+          ...editedProduct.sizes,
+          [newSizeName]: {
+            measurement: newSizeMeasurement,
+            stock: newSizeStock
+          }
         }
       });
-      setNewSize('');
+      setNewSizeName('');
+      setNewSizeMeasurement('');
       setNewSizeStock(1);
     }
   };
 
-  const removeSize = (size) => {
-    const updatedSizes = editedProduct.sizes?.filter(s => s !== size) || [];
-    const updatedSizeStock = { ...editedProduct.sizeStock };
-    delete updatedSizeStock[size];
+  const removeSize = (sizeName) => {
+    const updatedSizes = { ...editedProduct.sizes };
+    delete updatedSizes[sizeName];
     
     setEditedProduct({
       ...editedProduct,
-      sizes: updatedSizes,
-      sizeStock: updatedSizeStock
+      sizes: updatedSizes
     });
   };
 
@@ -74,11 +76,11 @@ function AdminProductCard({ product, onUpdate }) {
             
             <div className="product-sizes">
               <strong>Sizes:</strong>
-              {product.sizes?.length > 0 ? (
+              {product.sizes && Object.keys(product.sizes).length > 0 ? (
                 <div className="size-tags">
-                  {product.sizes.map(size => (
-                    <span key={size} className="size-tag">
-                      {size} ({product.sizeStock?.[size] || 0})
+                  {Object.entries(product.sizes).map(([sizeName, sizeInfo]) => (
+                    <span key={sizeName} className="size-tag">
+                      {sizeName} ({sizeInfo.measurement}) - {sizeInfo.stock} available
                     </span>
                   ))}
                 </div>
@@ -186,10 +188,17 @@ function AdminProductCard({ product, onUpdate }) {
             <div className="size-input-group">
               <input
                 type="text"
-                placeholder="Size"
+                placeholder="Size Name"
                 className="size-input"
-                value={newSize}
-                onChange={(e) => setNewSize(e.target.value.toUpperCase())}
+                value={newSizeName}
+                onChange={(e) => setNewSizeName(e.target.value.toUpperCase())}
+              />
+              <input
+                type="text"
+                placeholder="Measurement"
+                className="size-input"
+                value={newSizeMeasurement}
+                onChange={(e) => setNewSizeMeasurement(e.target.value)}
               />
               <input
                 type="number"
@@ -207,21 +216,26 @@ function AdminProductCard({ product, onUpdate }) {
                 Add Size
               </button>
             </div>
-            
-            {editedProduct.sizes?.length > 0 && (
-              <div className="selected-sizes">
-                <div className="size-tags">
-                  {editedProduct.sizes.map(size => (
-                    <div key={size} className="size-tag">
-                      <span>{size}</span>
-                      <span>({editedProduct.sizeStock?.[size] || 0})</span>
-                      <button onClick={() => removeSize(size)}>×</button>
-                    </div>
-                  ))}
-                </div>
+            {editedProduct.sizes && Object.keys(editedProduct.sizes).length > 0 && (
+            <div className="selected-sizes">
+              <div className="size-tags">
+                {Object.entries(editedProduct.sizes).map(([sizeName, sizeInfo]) => (
+                  <div key={sizeName} className="size-tag">
+                    <span>{sizeName}</span>
+                    <span>({sizeInfo.measurement})</span>
+                    <span>{sizeInfo.stock} in stock</span>
+                    <button 
+                      className='remove-size-btn'
+                      onClick={() => removeSize(sizeName)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
           
           <div className="edit-actions">
             <button onClick={handleSave} className="save-btn">

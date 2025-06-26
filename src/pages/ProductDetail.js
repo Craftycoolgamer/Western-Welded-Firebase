@@ -30,13 +30,16 @@ function ProductDetail() {
 
   const handleAddToCart = () => {
     // Validate size selection for products with sizes
-    if (product.sizes.length > 0 && !selectedSize) {
+    if (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize) {
       showNotification('Please select a size', 'error');
       return;
     }
 
     // Check stock availability
-    const availableStock = product.sizeStock?.[selectedSize] ?? product.stock;
+    const availableStock = selectedSize 
+      ? product.sizes[selectedSize]?.stock || 0 
+      : product.stock || 0;
+      
     if (quantity > availableStock) {
       showNotification(`Only ${availableStock} available in this size`, 'error');
       return;
@@ -45,10 +48,9 @@ function ProductDetail() {
     addToCart({
       ...product,
       quantity: quantity,
-      selectedSize: product.sizes.length > 0 ? selectedSize : null
+      selectedSize: selectedSize
     });
     
-    // Optional: Show success message
     showNotification(
       `${quantity} ${product.name} ${selectedSize ? `(Size: ${selectedSize})` : ''} added to cart!`,
       'success'
@@ -56,7 +58,9 @@ function ProductDetail() {
   };
 
   const handleIncrement = () => {
-    const availableStock = product.sizeStock?.[selectedSize] ?? product.stock;
+    const availableStock = selectedSize 
+      ? product.sizes[selectedSize]?.stock || 0 
+      : product.stock || 0;
     setQuantity(prev => Math.min(prev + 1, availableStock));
   };
 
@@ -123,24 +127,24 @@ function ProductDetail() {
         </div>
 
         {/* Size Selector */}
-        {product.sizes.length > 0 && (
+        {product.sizes && Object.keys(product.sizes).length > 0 && (
           <div className="size-selector-section">
             <h3>Select Size</h3>
             <div className="size-options">
-              {product.sizes.map(size => {
-                const sizeAvailable = product.sizeStock?.[size] ?? product.stock;
+              {Object.entries(product.sizes).map(([sizeName, sizeInfo]) => {
+                const sizeAvailable = sizeInfo.stock;
                 return (
                   <button
-                    key={size}
+                    key={sizeName}
                     className={`size-option ${
-                      selectedSize === size ? 'selected' : ''
+                      selectedSize === sizeName ? 'selected' : ''
                     } ${
                       sizeAvailable <= 0 ? 'out-of-stock' : ''
                     }`}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => setSelectedSize(sizeName)}
                     disabled={sizeAvailable <= 0}
                   >
-                    {size}
+                    {sizeName} ({sizeInfo.measurement})
                     {sizeAvailable <= 0 && <span className="stock-badge">Out of stock</span>}
                   </button>
                 );
@@ -160,9 +164,13 @@ function ProductDetail() {
                 −
               </button>
               <span>{quantity}</span>
-              <button //TODO Fix this condition
-                onClick={handleIncrement}  // Use the new handler
-                disabled={quantity >= (product.sizeStock?.[selectedSize] ?? product.stock)}
+              <button
+                onClick={handleIncrement}
+                disabled={quantity >= (
+                  selectedSize 
+                    ? product.sizes[selectedSize]?.stock || 0 
+                    : product.stock || 0
+                )}
               >
                 +
               </button>
@@ -170,8 +178,19 @@ function ProductDetail() {
             <button 
               className="add-to-cart-btn"
               onClick={handleAddToCart}
+              disabled={
+                (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize) ||
+                (selectedSize && product.sizes[selectedSize]?.stock <= 0) ||
+                (!selectedSize && product.stock <= 0)
+              }
             >
-              Add to Cart
+              {
+                (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize)
+                  ? 'Select Size'
+                  : (selectedSize && product.sizes[selectedSize]?.stock <= 0) || (!selectedSize && product.stock <= 0)
+                    ? 'Out of Stock'
+                    : 'Add to Cart'
+              }
             </button>
           </div>
         )}

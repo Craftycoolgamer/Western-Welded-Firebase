@@ -6,7 +6,6 @@ import Base64Uploader from '../components/Base64Uploader';
 import './AdminPanel.css';
 
 function AdminPanel() {
-  const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: '',
     price: 0,
@@ -14,9 +13,11 @@ function AdminPanel() {
     imageUrl: '',
     category: 'rings',
     material: 'gold',
-    sizes: [],
-    sizeStock: {}
+    sizes: {} 
   });
+
+  const [products, setProducts] = useState([]);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
 
@@ -33,9 +34,8 @@ function AdminPanel() {
   const handleAddProduct = () => {
     const productToAdd = {
       ...newProduct,
-      stock: newProduct.sizes.length > 0 
-        ? Object.values(newProduct.sizeStock).reduce((a, b) => a + b, 0)
-        : 1
+      // Calculate total stock from sizes
+      stock: Object.values(newProduct.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
     };
 
     const newProductRef = push(ref(db, 'products'));
@@ -48,8 +48,7 @@ function AdminPanel() {
       imageUrl: '',
       category: 'rings',
       material: 'gold',
-      sizes: [],
-      sizeStock: {}
+      sizes: {}
     });
     setIsFormOpen(false);
   };
@@ -86,10 +85,9 @@ function AdminPanel() {
                 type="number"
                 value={newProduct.price}
                 onChange={(e) => setNewProduct({...newProduct, price: parseFloat(e.target.value) || 0})}
-                // min="0"
+                min="0"
                 step="1"
                 required
-                placeholder='0'
               />
             </div>
 
@@ -114,9 +112,9 @@ function AdminPanel() {
                 onChange={(e) => setNewProduct({...newProduct, material: e.target.value})}
               >
                 {/* <option value="gold">Gold</option> */}
-                <option value="silver">Steel</option>
-                <option value="platinum">Copper</option>
-                {/* <option value="diamond">Diamond</option> */}
+                <option value="steel">Steel</option>
+                <option value="copper">Copper</option>
+                <option value="copperandsteel">Copper & Steel</option>
               </select>
             </div>
 
@@ -145,8 +143,14 @@ function AdminPanel() {
                 <div className="size-inputs">
                   <input
                     type="text"
-                    placeholder="Size"
-                    id="newSize"
+                    placeholder="Size Name"
+                    id="newSizeName"
+                    className="size-input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Measurement"
+                    id="newSizeMeasurement"
                     className="size-input"
                   />
                   <input
@@ -160,21 +164,26 @@ function AdminPanel() {
                     type="button"
                     className="add-size-btn"
                     onClick={() => {
-                      const sizeInput = document.getElementById('newSize');
+                      const nameInput = document.getElementById('newSizeName');
+                      const measurementInput = document.getElementById('newSizeMeasurement');
                       const stockInput = document.getElementById('newSizeStock');
-                      const size = sizeInput.value.trim().toUpperCase();
+                      const name = nameInput.value.trim().toUpperCase();
+                      const measurement = measurementInput.value.trim();
                       const stock = parseInt(stockInput.value) || 0;
                       
-                      if (size && !newProduct.sizes.includes(size)) {
+                      if (name && !newProduct.sizes[name]) {
                         setNewProduct({
                           ...newProduct,
-                          sizes: [...newProduct.sizes, size],
-                          sizeStock: {
-                            ...newProduct.sizeStock,
-                            [size]: stock
+                          sizes: {
+                            ...newProduct.sizes,
+                            [name]: {
+                              measurement,
+                              stock
+                            }
                           }
                         });
-                        sizeInput.value = '';
+                        nameInput.value = '';
+                        measurementInput.value = '';
                         stockInput.value = '';
                       }
                     }}
@@ -183,23 +192,23 @@ function AdminPanel() {
                   </button>
                 </div>
                 
-                {newProduct.sizes.length > 0 && (
+                {Object.keys(newProduct.sizes).length > 0 && (
                   <div className="selected-sizes">
                     <h4>Added Sizes:</h4>
                     <div className="size-tags">
-                      {newProduct.sizes.map(size => (
-                        <div key={size} className="size-tag">
-                          <span>{size}</span>
-                          <span>({newProduct.sizeStock[size] || 0})</span>
+                      {Object.entries(newProduct.sizes).map(([name, sizeInfo]) => (
+                        <div key={name} className="size-tag">
+                          <span>{name}</span>
+                          <span>({sizeInfo.measurement})</span>
+                          <span>{sizeInfo.stock} in stock</span>
                           <button
+                            className="remove-size-btn"
                             onClick={() => {
-                              const updatedSizes = newProduct.sizes.filter(s => s !== size);
-                              const updatedSizeStock = {...newProduct.sizeStock};
-                              delete updatedSizeStock[size];
+                              const updatedSizes = { ...newProduct.sizes };
+                              delete updatedSizes[name];
                               setNewProduct({
                                 ...newProduct,
-                                sizes: updatedSizes,
-                                sizeStock: updatedSizeStock
+                                sizes: updatedSizes
                               });
                             }}
                           >
