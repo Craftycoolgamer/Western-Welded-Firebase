@@ -8,12 +8,11 @@ import './AdminPanel.css';
 function AdminPanel() {
   const [newProduct, setNewProduct] = useState({
     name: '',
-    price: 0,
+    price: null,
     description: '',
     imageUrl: '',
-    category: 'rings',
-    material: 'gold',
-    sizes: {} 
+    category: 'bracelets',
+    material: 'steel',
   });
 
   const [products, setProducts] = useState([]);
@@ -32,23 +31,22 @@ function AdminPanel() {
   }, [updateTrigger]);
 
   const handleAddProduct = () => {
-    const productToAdd = {
-      ...newProduct,
-      // Calculate total stock from sizes
-      stock: Object.values(newProduct.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
-    };
+    // const productToAdd = {
+    //   ...newProduct,
+    //   // Calculate total stock from sizes
+    //   stock: Object.values(newProduct.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
+    // };
 
     const newProductRef = push(ref(db, 'products'));
-    set(newProductRef, productToAdd);
+    set(newProductRef, newProduct);
     
     setNewProduct({
       name: '',
-      price: 0,
+      price: null,
       description: '',
       imageUrl: '',
-      category: 'rings',
-      material: 'gold',
-      sizes: {}
+      category: 'bracelets',
+      material: 'steel',
     });
     setIsFormOpen(false);
   };
@@ -137,7 +135,7 @@ function AdminPanel() {
               />
             </div>
 
-            <div className="form-group full-width">
+            {/* <div className="form-group full-width">
               <label>Available Sizes</label>
               <div className="size-management">
                 <div className="size-inputs">
@@ -220,7 +218,7 @@ function AdminPanel() {
                   </div>
                 )}
               </div>
-            </div>
+            </div>*/}
           </div>
 
           <button 

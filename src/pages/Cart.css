@@ -225,6 +225,8 @@
   cursor: pointer;
   transition: background-color 0.3s;
   margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .checkout-btn:hover {

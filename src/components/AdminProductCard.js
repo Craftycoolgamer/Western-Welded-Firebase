@@ -7,9 +7,9 @@ function AdminProductCard({ product, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [newSizeName, setNewSizeName] = useState('');
-  const [newSizeMeasurement, setNewSizeMeasurement] = useState('');
-  const [newSizeStock, setNewSizeStock] = useState(1);
+  // const [newSizeName, setNewSizeName] = useState('');
+  // const [newSizeMeasurement, setNewSizeMeasurement] = useState('');
+  // const [newSizeStock, setNewSizeStock] = useState(1);
 
   const handleSave = () => {
     const productRef = ref(db, `products/${product.id}`);
@@ -28,44 +28,47 @@ function AdminProductCard({ product, onUpdate }) {
       });
   };
 
-  const addSize = () => {
-    if (newSizeName && !editedProduct.sizes?.[newSizeName]) {
-      setEditedProduct({
-        ...editedProduct,
-        sizes: {
-          ...editedProduct.sizes,
-          [newSizeName]: {
-            measurement: newSizeMeasurement,
-            stock: newSizeStock
-          }
-        }
-      });
-      setNewSizeName('');
-      setNewSizeMeasurement('');
-      setNewSizeStock(1);
-    }
-  };
+  // const addSize = () => {
+  //   if (newSizeName && !editedProduct.sizes?.[newSizeName]) {
+  //     setEditedProduct({
+  //       ...editedProduct,
+  //       sizes: {
+  //         ...editedProduct.sizes,
+  //         [newSizeName]: {
+  //           measurement: newSizeMeasurement,
+  //           stock: newSizeStock
+  //         }
+  //       }
+  //     });
+  //     setNewSizeName('');
+  //     setNewSizeMeasurement('');
+  //     setNewSizeStock(1);
+  //   }
+  // };
 
-  const removeSize = (sizeName) => {
-    const updatedSizes = { ...editedProduct.sizes };
-    delete updatedSizes[sizeName];
+  // const removeSize = (sizeName) => {
+  //   const updatedSizes = { ...editedProduct.sizes };
+  //   delete updatedSizes[sizeName];
     
-    setEditedProduct({
-      ...editedProduct,
-      sizes: updatedSizes
-    });
-  };
+  //   setEditedProduct({
+  //     ...editedProduct,
+  //     sizes: updatedSizes
+  //   });
+  // };
 
   return (
     <div className="admin-product-card">
       {!isEditing ? (
         <div className="product-view">
           <div className="product-image-container">
+            {product.stock == false && (
+              <div className="out-of-stock-banner-admin">Out of Stock</div>
+            )}
             <img 
               src={product.imageUrl || '/images/default-jewelry.jpg'} 
               alt={product.name}
               onError={(e) => {
-                e.target.src = '/images/default-jewelry.jpg';
+                e.target.src = '/images/default.jpg';
               }}
             />
           </div>
@@ -74,7 +77,8 @@ function AdminProductCard({ product, onUpdate }) {
             <p className="price">${product.price.toFixed(2)}</p>
             <p className="category">{product.category}</p>
             
-            <div className="product-sizes">
+
+            {/* <div className="product-sizes">
               <strong>Sizes:</strong>
               {product.sizes && Object.keys(product.sizes).length > 0 ? (
                 <div className="size-tags">
@@ -87,7 +91,7 @@ function AdminProductCard({ product, onUpdate }) {
               ) : (
                 <span>No sizes</span>
               )}
-            </div>
+            </div> */}
             
             <div className="product-actions">
               <button 
@@ -144,7 +148,7 @@ function AdminProductCard({ product, onUpdate }) {
               value={editedProduct.price}
               onChange={(e) => setEditedProduct({...editedProduct, price: parseFloat(e.target.value) || 0})}
               min="0"
-              step="0.01"
+              step="1"
             />
           </div>
           
@@ -167,12 +171,24 @@ function AdminProductCard({ product, onUpdate }) {
               value={editedProduct.material}
               onChange={(e) => setEditedProduct({...editedProduct, material: e.target.value})}
             >
-              <option value="gold">Gold</option>
-              <option value="silver">Silver</option>
-              <option value="platinum">Platinum</option>
-              <option value="diamond">Diamond</option>
+              <option value="copper">copper</option>
+              <option value="steel">Steel</option>
+              <option value="copper&steel">Copper & Steel</option>
+              {/* <option value="diamond">Diamond</option> */}
             </select>
           </div>
+
+          <div className="form-group">
+            <label>Order</label>
+            <select
+              value={editedProduct.stock}
+              onChange={(e) => setEditedProduct({...editedProduct, stock: e.target.value === 'true'})}
+            >
+              <option value="true">Ready to Order</option>
+              <option value="false">Not Ready to Order</option>
+            </select>
+          </div>
+
           
           <div className="form-group">
             <label>Description</label>
@@ -183,7 +199,7 @@ function AdminProductCard({ product, onUpdate }) {
             />
           </div>
           
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Manage Sizes</label>
             <div className="size-input-group">
               <input
@@ -235,7 +251,7 @@ function AdminProductCard({ product, onUpdate }) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
           
           <div className="edit-actions">
             <button onClick={handleSave} className="save-btn">

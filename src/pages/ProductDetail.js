@@ -22,28 +22,27 @@ function ProductDetail() {
       setProduct({ 
         id: productId, 
         ...productData,
-        sizes: productData.sizes || []
       });
       setLoading(false);
     });
   }, [productId]);
 
   const handleAddToCart = () => {
-    // Validate size selection for products with sizes
-    if (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize) {
+    // Validate size is selected
+    if (selectedSize === '') {
       showNotification('Please select a size', 'error');
       return;
     }
 
-    // Check stock availability
-    const availableStock = selectedSize 
-      ? product.sizes[selectedSize]?.stock || 0 
-      : product.stock || 0;
+    // // Check stock availability
+    // const availableStock = selectedSize 
+    //   ? product.sizes[selectedSize]?.stock || 0 
+    //   : product.stock || 0;
       
-    if (quantity > availableStock) {
-      showNotification(`Only ${availableStock} available in this size`, 'error');
-      return;
-    }
+    // if (quantity > availableStock) {
+    //   showNotification(`Only ${availableStock} available in this size`, 'error');
+    //   return;
+    // }
 
     addToCart({
       ...product,
@@ -58,10 +57,7 @@ function ProductDetail() {
   };
 
   const handleIncrement = () => {
-    const availableStock = selectedSize 
-      ? product.sizes[selectedSize]?.stock || 0 
-      : product.stock || 0;
-    setQuantity(prev => Math.min(prev + 1, availableStock));
+    setQuantity(prev => prev + 1);
   };
 
   if (loading) return <div className="loading-spinner">Loading...</div>;
@@ -79,7 +75,7 @@ function ProductDetail() {
           }}
         />
         {product.isNew && <span className="new-badge">New</span>}
-        {product.stock <= 0 && <span className="out-of-stock-badge">Out of Stock</span>}
+        {!product.stock && <span className="out-of-stock-badge">Out of Stock</span>}
       </div>
 
       <div className="product-info">
@@ -120,14 +116,14 @@ function ProductDetail() {
           </div>
           <div className="spec-row">
             <span className="spec-label">Availability:</span>
-            <span className={`spec-value ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            <span className={`spec-value ${product.stock ? 'in-stock' : 'out-of-stock'}`}>
+              {product.stock ? `Order now` : 'Out of stock'}
             </span>
           </div>
         </div>
 
         {/* Size Selector */}
-        {product.sizes && Object.keys(product.sizes).length > 0 && (
+        {/* {product.sizes && Object.keys(product.sizes).length > 0 && (
           <div className="size-selector-section">
             <h3>Select Size</h3>
             <div className="size-options">
@@ -151,10 +147,10 @@ function ProductDetail() {
               })}
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Quantity Selector */}
-        {product.stock > 0 && (
+        {product.stock && (
           <div className="add-to-cart-section">
             <div className="quantity-selector">
               <button 
@@ -166,29 +162,54 @@ function ProductDetail() {
               <span>{quantity}</span>
               <button
                 onClick={handleIncrement}
-                disabled={quantity >= (
-                  selectedSize 
-                    ? product.sizes[selectedSize]?.stock || 0 
-                    : product.stock || 0
-                )}
+                // disabled={quantity >= (
+                //   selectedSize 
+                //     ? product.sizes[selectedSize]?.stock || 0 
+                //     : product.stock || 0
+                // )}
               >
                 +
               </button>
             </div>
+
+            <div className="size-selector">
+              <label htmlFor="size-select">Size:</label>
+              <select
+                id="size-select"
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                className="size-dropdown"
+              >
+                <option value="">Select a size</option>
+                <option value="5.5">5 1/2 inch</option>
+                <option value="5.75">5 3/4 inch</option>
+                <option value="6">6 inch</option>
+                <option value="6.25">6 1/4 inch</option> 
+                <option value="6.5">6 1/2 inch</option>
+                <option value="6.75">6 3/4 inch</option>
+                <option value="7">7 inch</option>
+                <option value="7.25">7 1/4 inch</option>
+                <option value="7.5">7 1/2 inch</option>
+                <option value="7.75">7 3/4 inch</option>
+                <option value="8">8 inch</option>
+                <option value="8.25">8 1/4 inch</option>
+                <option value="8.5">8 1/2 inch</option>
+                <option value="8.75">8 3/4 inch</option>
+                <option value="9">9 inch</option>
+              </select>
+            </div>
+
+
             <button 
               className="add-to-cart-btn"
               onClick={handleAddToCart}
               disabled={
-                (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize) ||
-                (selectedSize && product.sizes[selectedSize]?.stock <= 0) ||
-                (!selectedSize && product.stock <= 0)
+                (!selectedSize)
               }
             >
               {
-                (product.sizes && Object.keys(product.sizes).length > 0 && !selectedSize)
-                  ? 'Select Size'
-                  : (selectedSize && product.sizes[selectedSize]?.stock <= 0) || (!selectedSize && product.stock <= 0)
-                    ? 'Out of Stock'
+                (!selectedSize)
+                    ? 'Please Select Size'
                     : 'Add to Cart'
               }
             </button>

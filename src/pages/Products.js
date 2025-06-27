@@ -17,10 +17,10 @@ function Products() {
         const allProducts = Object.entries(data).map(([id, product]) => ({
           id,
           ...product,
-          // Calculate total stock for each product
-          stock: product.sizes 
-            ? Object.values(product.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
-            : product.stock || 0
+          // // Calculate total stock for each product
+          // stock: product.sizes 
+          //   ? Object.values(product.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
+          //   : product.stock || 0
         }));
         
         setProducts(

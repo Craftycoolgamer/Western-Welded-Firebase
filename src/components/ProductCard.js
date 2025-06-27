@@ -6,11 +6,6 @@ import './ProductCard.css';
 function ProductCard({ product }) {
   const { addToCart } = useCart();
   
-  // Calculate total stock from sizes
-  const totalStock = product.sizes 
-    ? Object.values(product.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
-    : 0;
-
   return (
     <div className="product-card">
       <Link to={`/product/${product.id}`} className="product-link">
@@ -23,7 +18,7 @@ function ProductCard({ product }) {
               e.target.src = '/images/default-jewelry.jpg';
             }}
           />
-          {totalStock <= 0 && (
+          {!product.stock && (
             <div className="out-of-stock-banner">Out of Stock</div>
           )}
         </div>
