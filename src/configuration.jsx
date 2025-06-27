@@ -1,7 +1,7 @@
 // Initialize Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { getStorage } from "firebase/storage"; //Do not have storage tier 
 import { getDatabase } from "firebase/database";
 
 

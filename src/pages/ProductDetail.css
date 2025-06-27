@@ -267,6 +267,7 @@
   transition: all 0.3s;
   flex-grow: 1;
   margin: 0;
+  width: 100%;
 }
 
 .add-to-cart-btn:hover {

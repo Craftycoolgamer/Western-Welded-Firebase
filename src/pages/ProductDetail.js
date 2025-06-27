@@ -106,14 +106,14 @@ function ProductDetail() {
 
         {/* Product Specifications */}
         <div className="product-specs">
-          <div className="spec-row">
+          {/* <div className="spec-row">
             <span className="spec-label">Material:</span>
             <span className="spec-value">{product.material}</span>
-          </div>
-          <div className="spec-row">
+          </div> */}
+          {/* <div className="spec-row">
             <span className="spec-label">Category:</span>
             <span className="spec-value">{product.category}</span>
-          </div>
+          </div> */}
           <div className="spec-row">
             <span className="spec-label">Availability:</span>
             <span className={`spec-value ${product.stock ? 'in-stock' : 'out-of-stock'}`}>
@@ -167,6 +167,7 @@ function ProductDetail() {
                 //     ? product.sizes[selectedSize]?.stock || 0 
                 //     : product.stock || 0
                 // )}
+                disabled={quantity >= 100}
               >
                 +
               </button>

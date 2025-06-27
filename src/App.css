@@ -68,12 +68,12 @@ header {
   text-align: center;
 }
 
-.price {
+/* .price {
   margin: 0 1rem;
   font-weight: bold;
   color: #b78d65;
   font-size: 1.1rem;
-}
+} */
 
 .products-page {
   max-width: 1200px;
@@ -89,7 +89,7 @@ header {
 
 button {
   display: block;
-  width: calc(100% - 30px);
+  /* width: calc(100% - 30px); */
   margin: 0 15px 15px;
   padding: 10px;
   background: #b78d65;

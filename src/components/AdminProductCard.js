@@ -75,7 +75,7 @@ function AdminProductCard({ product, onUpdate }) {
           <div className="product-info">
             <h3>{product.name}</h3>
             <p className="price">${product.price.toFixed(2)}</p>
-            <p className="category">{product.category}</p>
+            {/* <p className="category">{product.category}</p> */}
             
 
             {/* <div className="product-sizes">
@@ -152,7 +152,7 @@ function AdminProductCard({ product, onUpdate }) {
             />
           </div>
           
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Category</label>
             <select
               value={editedProduct.category}
@@ -174,9 +174,9 @@ function AdminProductCard({ product, onUpdate }) {
               <option value="copper">copper</option>
               <option value="steel">Steel</option>
               <option value="copper&steel">Copper & Steel</option>
-              {/* <option value="diamond">Diamond</option> */}
+              // {/* <option value="diamond">Diamond</option> *
             </select>
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label>Order</label>

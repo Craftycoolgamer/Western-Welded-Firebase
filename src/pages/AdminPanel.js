@@ -11,14 +11,16 @@ function AdminPanel() {
     price: null,
     description: '',
     imageUrl: '',
-    category: 'bracelets',
+    // category: 'bracelets',
     material: 'steel',
   });
 
   const [products, setProducts] = useState([]);
-
+  const [categories, setCategories] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [showCategoriesModal, setShowCategoriesModal] = useState(false);
+  const [showOrdersModal, setShowOrdersModal] = useState(false);
 
   useEffect(() => {
     const productsRef = ref(db, 'products');
@@ -28,15 +30,27 @@ function AdminPanel() {
         setProducts(Object.entries(data).map(([id, product]) => ({ id, ...product })));
       }
     });
+
+    const categoriesRef = ref(db, 'categories');
+    onValue(categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setCategories(Object.entries(data).map(([id, category]) => ({ id, ...category })));
+      }
+    });
+
   }, [updateTrigger]);
 
-  const handleAddProduct = () => {
-    // const productToAdd = {
-    //   ...newProduct,
-    //   // Calculate total stock from sizes
-    //   stock: Object.values(newProduct.sizes).reduce((sum, size) => sum + (size.stock || 0), 0)
-    // };
 
+  const handleSave = () => {
+    const categoriesRef = ref(db, 'categories/${category.id}');
+    set(categoriesRef, categories)
+      .then(() => {setShowCategoriesModal(false);})
+  };
+
+
+
+  const handleAddProduct = () => {
     const newProductRef = push(ref(db, 'products'));
     set(newProductRef, newProduct);
     
@@ -45,7 +59,7 @@ function AdminPanel() {
       price: null,
       description: '',
       imageUrl: '',
-      category: 'bracelets',
+      // category: 'bracelets',
       material: 'steel',
     });
     setIsFormOpen(false);
@@ -55,13 +69,74 @@ function AdminPanel() {
     <div className="admin-panel">
       <div className="admin-header">
         <h1>Product Management</h1>
-        <button 
-          className="add-product-btn"
-          onClick={() => setIsFormOpen(!isFormOpen)}
-        >
-          {isFormOpen ? 'Cancel' : '+ Add Product'}
-        </button>
+        <div className="admin-actions">
+          {/* <button 
+            className="product-admin-btn"
+            onClick={() => setShowCategoriesModal(true)}
+          >
+            Edit Categories
+          </button> */}
+          <button 
+            className="product-admin-btn"
+            onClick={() => setShowOrdersModal(true)}
+          >
+            View Orders
+          </button>
+          <button 
+            className="add-product-btn"
+            onClick={() => setIsFormOpen(!isFormOpen)}
+          >
+            {isFormOpen ? 'Cancel' : '+ Add Product'}
+          </button>
+        </div>
       </div>
+
+      {/* Categories Modal
+      {showCategoriesModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Edit Product Categories</h2>
+            <p>Category management functionality will be implemented here.</p>
+            
+            
+            
+            
+            
+            
+            <div className="modal-actions">
+              <button onClick={handleSave} className="save-btn">
+                Save Changes
+              </button>
+              <button 
+                className="modal-btn cancel"
+                onClick={() => setShowCategoriesModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
+
+      {/* Orders Modal */}
+      {showOrdersModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Order History</h2>
+            <p>Order history functionality will be implemented here.</p>
+            <div className="modal-actions">
+              <button 
+                className="modal-btn cancel"
+                onClick={() => setShowOrdersModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {isFormOpen && (
         <div className="product-form">
@@ -89,7 +164,7 @@ function AdminPanel() {
               />
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Category*</label>
               <select
                 value={newProduct.category}
@@ -101,20 +176,20 @@ function AdminPanel() {
                 <option value="bracelets">Bracelets</option>
                 <option value="flowers">Flowers</option>
               </select>
-            </div>
+            </div> */}
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Material*</label>
               <select
                 value={newProduct.material}
                 onChange={(e) => setNewProduct({...newProduct, material: e.target.value})}
               >
-                {/* <option value="gold">Gold</option> */}
+                {/* <option value="gold">Gold</option> 
                 <option value="steel">Steel</option>
                 <option value="copper">Copper</option>
                 <option value="copperandsteel">Copper & Steel</option>
               </select>
-            </div>
+            </div> */}
 
             <div className="form-group full-width">
               <label>Product Image*</label>

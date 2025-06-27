@@ -38,11 +38,11 @@ function Cart() {
                 </div>
                 <div className="item-details">
                   <h3>{item.name}</h3>
-                  <p className="item-category">{item.category}</p>
+                  {/* <p className="item-category">{item.category}</p> */}
                   {item.selectedSize && (
                     <p className="item-size">Size: {item.selectedSize}</p>
                   )}
-                  <p className="item-material">Material: {item.material}</p>
+                  {/* <p className="item-material">Material: {item.material}</p> */}
                   
                   <div className="quantity-controls">
                     <label>Qty:</label>
@@ -50,7 +50,7 @@ function Cart() {
                       value={item.quantity}
                       onChange={(e) => handleQuantityChange(item.id, item.selectedSize, e)}
                     >
-                      {[...Array(10).keys()].map(num => (
+                      {[...Array(100).keys()].map(num => (
                         <option key={num + 1} value={num + 1}>{num + 1}</option>
                       ))}
                     </select>
