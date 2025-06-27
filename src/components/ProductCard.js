@@ -1,10 +1,10 @@
-import React from 'react';
+// import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+// import { useCart } from '../context/CartContext';
 import './ProductCard.css';
 
 function ProductCard({ product }) {
-  const { addToCart } = useCart();
+  // const { addToCart } = useCart();
   
   return (
     <div className="product-card">

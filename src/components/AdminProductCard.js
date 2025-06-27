@@ -61,7 +61,7 @@ function AdminProductCard({ product, onUpdate }) {
       {!isEditing ? (
         <div className="product-view">
           <div className="product-image-container">
-            {product.stock == false && (
+            {product.stock === false && (
               <div className="out-of-stock-banner-admin">Out of Stock</div>
             )}
             <img 

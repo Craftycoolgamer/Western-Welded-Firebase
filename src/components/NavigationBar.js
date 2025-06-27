@@ -30,13 +30,13 @@ function NavigationBar() {
       <div className="navbar-container">
         {/* Logo/Brand */}
         <Link to="/" className="navbar-brand">
-          <img className="logo-icon" src="/images/Western_Welded_logo.svg" />
+          <img className="logo-icon" src="/images/Western_Welded_logo.svg" alt='Western Welded Logo'/>
           {/* <span className="logo-text">Western Welded</span> */}
         </Link>
 
         <div className="nav-content">
           
-{/* Main Navigation Links */}
+        {/* Main Navigation Links */}
         <div className="navbar-links">
           <Link to="/products" className="nav-link">Shop</Link>
           <Link to="/about" className="nav-link">About</Link>
@@ -60,7 +60,7 @@ function NavigationBar() {
             <div className="user-dropdown">
               <span className="user-icon">👤</span>
               <div className="dropdown-content">
-                <Link to="/account">My Account</Link>
+                <Link to="/">My Account</Link>
                 <button onClick={handleLogout} className="logout-btn">
                   Logout
                 </button>

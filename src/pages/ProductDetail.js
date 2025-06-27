@@ -97,7 +97,7 @@ function ProductDetail() {
         </div>
 
         {/* Description */}
-        { product.description != "" && (
+        { product.description !== "" && (
           <div className="product-description">
             <p>{product.description}</p>
           </div>

@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+// import React, { useState } from 'react';
+// import { getFunctions, httpsCallable } from 'firebase/functions';
 import './Contact.css';
 
 function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [status, setStatus] = useState({ loading: false, message: '', error: '' });
+  // const [formData, setFormData] = useState({
+  //   name: '',
+  //   email: '',
+  //   message: ''
+  // });
+  // const [status, setStatus] = useState({ loading: false, message: '', error: '' });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({ ...prev, [name]: value }));
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus({ loading: true, message: '', error: '' });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setStatus({ loading: true, message: '', error: '' });
 
-    try {
-      const functions = getFunctions();
-      const sendMessage = httpsCallable(functions, 'sendContactMessage');
-      await sendMessage(formData);
+  //   try {
+  //     const functions = getFunctions();
+  //     const sendMessage = httpsCallable(functions, 'sendContactMessage');
+  //     await sendMessage(formData);
       
-      setStatus({ loading: false, message: 'Message sent successfully!', error: '' });
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      console.error('Error:', error);
-      setStatus({ 
-        loading: false, 
-        message: '', 
-        error: error.message || 'Failed to send message. Please try again.' 
-      });
-    }
-  };
+  //     setStatus({ loading: false, message: 'Message sent successfully!', error: '' });
+  //     setFormData({ name: '', email: '', message: '' });
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     setStatus({ 
+  //       loading: false, 
+  //       message: '', 
+  //       error: error.message || 'Failed to send message. Please try again.' 
+  //     });
+  //   }
+  // };
 
   return (
     <div className="contact-container">

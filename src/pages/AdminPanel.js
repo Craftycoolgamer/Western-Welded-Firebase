@@ -16,10 +16,10 @@ function AdminPanel() {
   });
 
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
-  const [showCategoriesModal, setShowCategoriesModal] = useState(false);
+  // const [showCategoriesModal, setShowCategoriesModal] = useState(false);
   const [showOrdersModal, setShowOrdersModal] = useState(false);
 
   useEffect(() => {
@@ -31,22 +31,22 @@ function AdminPanel() {
       }
     });
 
-    const categoriesRef = ref(db, 'categories');
-    onValue(categoriesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setCategories(Object.entries(data).map(([id, category]) => ({ id, ...category })));
-      }
-    });
+    // const categoriesRef = ref(db, 'categories');
+    // onValue(categoriesRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   if (data) {
+    //     setCategories(Object.entries(data).map(([id, category]) => ({ id, ...category })));
+    //   }
+    // });
 
   }, [updateTrigger]);
 
 
-  const handleSave = () => {
-    const categoriesRef = ref(db, 'categories/${category.id}');
-    set(categoriesRef, categories)
-      .then(() => {setShowCategoriesModal(false);})
-  };
+  // const handleSave = () => {
+  //   const categoriesRef = ref(db, 'categories/${category.id}');
+  //   set(categoriesRef, categories)
+  //     .then(() => {setShowCategoriesModal(false);})
+  // };
 
 
 
